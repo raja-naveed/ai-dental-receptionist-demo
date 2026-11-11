@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brightside Family Dental · AI Front Desk Demo</title>
+<meta name="description" content="Demo: AI front desk for a dental clinic. 24/7 chat, booking, reminders and review requests.">
+<style>
+:root{
+  --brand:#0e7c86;--brand-d:#0a5f67;--brand-l:#e6f5f6;--accent:#ff8a5b;
+  --ink:#0f2530;--muted:#5b707b;--line:#e3eaee;--bg:#f7fafb;--card:#fff;
+  --ok:#1f9d55;--warn:#d97706;--err:#dc2626;--r:14px;
+  --sh:0 10px 30px rgba(15,37,48,.08);--sh2:0 20px 50px rgba(15,37,48,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+a{color:var(--brand);text-decoration:none}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+.demo-bar{background:var(--ink);color:#cfe3e6;font-size:13px;text-align:center;padding:7px 12px}
+.demo-bar b{color:#fff}
+header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink)}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#36b3a8);display:grid;place-items:center;color:#fff}
+.logo small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.tabs{display:flex;gap:4px;background:var(--brand-l);padding:4px;border-radius:999px}
+.tab{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--brand-d)}
+.tab.active{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);color:var(--ink)}
+.icon-btn{border:1px solid var(--line);background:#fff;border-radius:10px;width:40px;height:40px;display:grid;place-items:center;color:var(--muted)}
+.icon-btn:hover{color:var(--brand)}
+.nav-right{display:flex;gap:8px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;transition:.15s}
+.btn-primary{background:var(--brand);color:#fff}.btn-primary:hover{background:var(--brand-d)}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+.btn-sm{padding:8px 12px;font-size:13px;border-radius:10px}
+/* hero */
+.hero{padding:64px 0 40px;background:radial-gradient(1000px 400px at 85% -10%,#d8f1f2 0,transparent 60%),radial-gradient(700px 300px at -10% 10%,#fff1ea 0,transparent 60%)}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.pill{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.dot.closed{background:var(--warn)}
+h1{font-size:46px;line-height:1.08;margin:16px 0 14px;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--brand)}
+.lead{font-size:18px;color:var(--muted);max-width:540px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+.trust{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.trust b{color:var(--ink);font-size:18px;display:block}
+.hero-card{background:#fff;border-radius:22px;box-shadow:var(--sh2);padding:22px;position:relative}
+.hero-card h3{margin:0 0 4px}
+.slot-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.slot-preview span{background:var(--brand-l);color:var(--brand-d);font-weight:700;font-size:13px;text-align:center;padding:9px 0;border-radius:10px}
+.hero-card .mini{font-size:13px;color:var(--muted)}
+.badge-float{position:absolute;right:-12px;top:-14px;background:var(--accent);color:#fff;font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:var(--sh)}
+section{padding:56px 0}
+.sec-title{text-align:center;max-width:640px;margin:0 auto 32px}
+.sec-title h2{font-size:32px;margin:0 0 8px;letter-spacing:-.01em}
+.sec-title p{color:var(--muted);margin:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+.card h4{margin:10px 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.svc-ic{width:44px;height:44px;border-radius:12px;background:var(--brand-l);display:grid;place-items:center;font-size:22px}
+.price{font-weight:700;color:var(--brand-d);font-size:13px;margin-top:10px}
+.ins{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.ins span{background:#fff;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-weight:600;color:var(--muted)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+table.hours{width:100%;border-collapse:collapse;font-size:15px}
+table.hours td{padding:8px 0;border-bottom:1px dashed var(--line)}
+table.hours td:last-child{text-align:right;font-weight:600}
+table.hours tr.today td{color:var(--brand-d)}
+.map{height:180px;border-radius:12px;background:linear-gradient(135deg,#e6f5f6,#f4f8fa);position:relative;overflow:hidden;margin-top:12px}
+.map:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#d9e7ea 1px,transparent 1px),linear-gradient(90deg,#d9e7ea 1px,transparent 1px);background-size:28px 28px}
+.map .pin{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);font-size:34px}
+.quote{font-size:15px}
+.quote .stars{color:#f5a524;letter-spacing:2px}
+.quote .who{margin-top:10px;font-weight:700;font-size:14px}
+footer{background:var(--ink);color:#a9bec5;padding:32px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+/* dashboard */
+#dashboard{display:none;padding:32px 0 80px}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.dash-head h2{margin:0;font-size:28px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stat .n{font-size:28px;font-weight:800}
+.stat .l{color:var(--muted);font-size:13px}
+.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:10px 8px;border-bottom:1px solid var(--line)}
+.tbl td b{white-space:nowrap}
+.tbl td .btn{white-space:nowrap}
+.tbl td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr.sel td{background:var(--brand-l)}
+.tbl tr{cursor:pointer}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px}
+.tag.booked{background:#e7f6ee;color:var(--ok)}
+.tag.cancelled{background:#fdecec;color:var(--err)}
+.tag.completed{background:#eef2ff;color:#4f46e5}
+.tag.rescheduled{background:#fff6e5;color:var(--warn)}
+.empty{color:var(--muted);text-align:center;padding:30px 10px}
+.phone{background:#111;border-radius:30px;padding:12px;max-width:320px;margin:0 auto}
+.phone-screen{background:#f2f2f7;border-radius:22px;padding:14px;min-height:200px}
+.phone-top{text-align:center;font-size:12px;color:#888;margin-bottom:8px}
+.sms{background:#e5e5ea;color:#111;border-radius:18px 18px 18px 4px;padding:10px 13px;font-size:14px;max-width:92%;white-space:pre-wrap}
+.sms-label{font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+.email-prev{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14px;white-space:pre-wrap}
+.lead-item{border-bottom:1px solid var(--line);padding:10px 0;font-size:14px}
+.lead-item:last-child{border:0}
+.lead-item small{color:var(--muted)}
+/* chat widget */
+.launcher{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;align-items:center;gap:10px}
+.launcher-bubble{background:#fff;border-radius:14px;padding:10px 14px;box-shadow:var(--sh2);font-size:14px;max-width:240px;animation:pop .4s ease}
+.launcher-btn{width:62px;height:62px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--brand),#36b3a8);color:#fff;box-shadow:var(--sh2);display:grid;place-items:center;position:relative}
+.launcher-btn .ping{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid #fff}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.chat{position:fixed;right:22px;bottom:96px;width:390px;height:620px;max-height:calc(100vh - 120px);background:#fff;border-radius:20px;box-shadow:var(--sh2);z-index:70;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--line)}
+.chat.open{display:flex;animation:pop .25s ease}
+.chat-head{background:linear-gradient(135deg,var(--brand),#2aa198);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:20px;flex:none}
+.chat-head .t{flex:1;min-width:0}
+.chat-head b{display:block;font-size:15px}
+.chat-head small{opacity:.9;font-size:12px;display:flex;align-items:center;gap:6px}
+.chat-head .dot{background:#7cf0b0}
+.chat-head .dot.closed{background:#ffd27a}
+.chat-head button{background:rgba(255,255,255,.15);border:0;color:#fff;width:32px;height:32px;border-radius:9px}
+.after-hours{background:#fff7e8;color:#8a5a00;font-size:12.5px;padding:8px 14px;border-bottom:1px solid #f6e3bd;display:none}
+.after-hours.show{display:block}
+.msgs{flex:1;overflow-y:auto;padding:16px;background:#f7fafb;display:flex;flex-direction:column;gap:10px}
+.msgs>*{flex-shrink:0}
+.msg{max-width:85%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word;animation:pop .2s ease}
+.msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.user{background:var(--brand);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.msg.sys{align-self:center;background:transparent;color:var(--muted);font-size:12px;padding:2px}
+.msg a{color:inherit;text-decoration:underline}
+.typing{display:inline-flex;gap:4px;padding:12px 14px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#9fb3bb;animation:bl 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.chips{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;max-width:100%}
+.chip{border:1px solid var(--brand);color:var(--brand-d);background:#fff;border-radius:999px;padding:7px 12px;font-size:13.5px;font-weight:600}
+.chip:hover{background:var(--brand-l)}
+.chip.slot{border-radius:10px;min-width:78px;text-align:center}
+.chip:disabled{opacity:.45;cursor:default}
+.summary{align-self:stretch;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;animation:pop .25s ease}
+.summary .sh{background:var(--brand-l);padding:12px 14px;display:flex;align-items:center;gap:10px;font-weight:800;color:var(--brand-d)}
+.summary .sh .ck{width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:14px}
+.summary dl{margin:0;padding:10px 14px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.summary dt{color:var(--muted)}
+.summary dd{margin:0;font-weight:600}
+.summary .sf{padding:10px 14px;border-top:1px dashed var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.summary.cancel .sh{background:#fdecec;color:var(--err)}
+.summary.cancel .sh .ck{background:var(--err)}
+.composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}
+.composer input{flex:1;border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:15px;outline:none}
+.composer input:focus{border-color:var(--brand)}
+.composer button{border:0;background:var(--brand);color:#fff;border-radius:12px;width:46px}
+.powered{text-align:center;font-size:11px;color:var(--muted);padding:0 0 8px;background:#fff}
+.mode-tag{font-size:10.5px;background:rgba(255,255,255,.2);padding:2px 7px;border-radius:999px;margin-left:4px}
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,37,48,.45);z-index:90;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:460px;width:100%;padding:22px;box-shadow:var(--sh2)}
+.modal h3{margin:0 0 6px}
+.modal label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+.modal input,.modal select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.modal .hint{font-size:12.5px;color:var(--muted)}
+.modal .row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.check{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:12px}
+.check input{width:auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:100;opacity:0;transition:.25s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:900px){
+  .hero-grid,.info-grid,.dash-grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  h1{font-size:36px}
+}
+@media (max-width:600px){
+  .grid3{grid-template-columns:1fr}
+  .nav .logo small{display:none}
+  .tab{padding:7px 10px;font-size:13px}
+  .chat{right:0;bottom:0;width:100%;height:100%;max-height:100%;border-radius:0}
+  .launcher{right:14px;bottom:14px}
+  .launcher-bubble{display:none}
+  h1{font-size:31px}
+  .hero{padding-top:36px}
+  .tbl .hide-sm{display:none}
+}
+</style>
+</head>
+<body>
+<div class="demo-bar"><b>Demo</b> · Brightside Family Dental is a fictional clinic. AI front desk demo built by Raja Naveed.</div>
+<header class="top">
+  <div class="wrap nav">
+    <div class="logo"><div class="logo-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 3c-2.5 0-4 2-4 4.5 0 3 1.2 5 2 8 .6 2.3 1 5.5 2.6 5.5 1.7 0 1.6-4.5 4.4-4.5s2.7 4.5 4.4 4.5c1.6 0 2-3.2 2.6-5.5.8-3 2-5 2-8C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z" fill="#fff"/></svg>
+    </div><div>Brightside<small>Family Dental</small></div></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="site" id="tab-site">Website</button>
+      <button class="tab" data-view="dashboard" id="tab-dash">Clinic dashboard</button>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="settingsBtn" title="Demo settings" aria-label="Demo settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="site">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><span class="dot" id="openDot"></span><span id="openText">Open now</span></span>
+        <h1>Gentle dental care for the <em>whole family</em>.</h1>
+        <p class="lead">Cleanings, fillings, Invisalign and same-day emergencies in Springfield. Book in under a minute, any time of day, with our 24/7 virtual front desk.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-open-chat="book">Book an appointment</button>
+          <button class="btn btn-ghost" data-open-chat="emergency">Dental emergency?</button>
+        </div>
+        <div class="trust"><div><b>4.9 ★</b>Sample rating</div><div><b>Most PPO</b>plans accepted</div><div><b>Same-day</b>emergency visits</div></div>
+      </div>
+      <div class="hero-card">
+        <span class="badge-float">Online booking 24/7</span>
+        <h3>Next available</h3>
+        <div class="mini" id="nextDayLabel">Loading…</div>
+        <div class="slot-preview" id="slotPreview"></div>
+        <p class="mini" style="margin-top:14px">Tap the chat bubble to book, reschedule or ask about insurance, even after hours.</p>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px" data-open-chat="book">Pick a time</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-title"><h2>Services</h2><p>Everything your family needs under one roof.</p></div>
+      <div class="grid3" id="svcGrid"></div>
+    </div>
+  </section>
+
+  <section style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="wrap">
+      <div class="sec-title"><h2>Insurance we accept</h2><p>In-network with most major PPO plans. No insurance? Ask about our membership plan.</p></div>
+      <div class="ins" id="insList"></div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap info-grid">
+      <div class="card">
+        <h3 style="margin-top:0">Hours</h3>
+        <table class="hours" id="hoursTbl"></table>
+        <p class="mini" style="color:var(--muted);font-size:13px;margin-top:10px">Closed now? The virtual assistant still books appointments and takes messages.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Visit us</h3>
+        <div id="addr"></div>
+        <div class="map"><span class="pin">📍</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-title"><h2>What patients say</h2><p>Sample reviews for this demo.</p></div>
+      <div class="grid3">
+        <div class="card quote"><div class="stars">★★★★★</div>Booked a cleaning at 11pm from my phone, got a reminder the day before. Super easy.<div class="who">Sample patient</div></div>
+        <div class="card quote"><div class="stars">★★★★★</div>Cracked a tooth on a Saturday and got a same-day slot. The team was so kind.<div class="who">Sample patient</div></div>
+        <div class="card quote"><div class="stars">★★★★★</div>They answered my insurance question in the chat before I even called.<div class="who">Sample patient</div></div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="wrap"><div>© <span id="yr"></span> Brightside Family Dental (fictional demo)</div><div>Demo by Raja Naveed · rajanaveeddev@gmail.com</div></div></footer>
+</main>
+
+<main id="dashboard">
+  <div class="wrap">
+    <div class="dash-head">
+      <div><h2>Clinic dashboard</h2><div style="color:var(--muted)">What the front-desk team sees. Data stays in this browser (localStorage).</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" id="seedBtn">Add sample bookings</button>
+        <button class="btn btn-ghost btn-sm" id="resetBtn">Reset demo data</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" id="stUpcoming">0</div><div class="l">Upcoming appointments</div></div>
+      <div class="stat"><div class="n" id="stAfter">0</div><div class="l">Booked after hours</div></div>
+      <div class="stat"><div class="n" id="stLeads">0</div><div class="l">Messages for staff</div></div>
+      <div class="stat"><div class="n" id="stReviews">0</div><div class="l">Review requests sent</div></div>
+    </div>
+    <div class="dash-grid">
+      <div class="card" style="padding:14px 16px;overflow-x:auto">
+        <h3 style="margin:4px 0 8px">Appointments</h3>
+        <table class="tbl" id="apptTbl">
+          <thead><tr><th>When</th><th>Patient</th><th class="hide-sm">Service</th><th>Status</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty" id="apptEmpty">No appointments yet. Book one in the chat on the Website tab.</div>
+        <h3 style="margin:22px 0 4px">Messages &amp; callback requests</h3>
+        <div id="leadList"><div class="empty">No messages yet.</div></div>
+      </div>
+      <div>
+        <div class="card">
+          <h3 style="margin-top:0">Automated messages</h3>
+          <div class="hint" style="color:var(--muted);font-size:13px" id="prevFor">Select an appointment to preview its messages.</div>
+          <div class="sms-label">Confirmation SMS (sent instantly)</div>
+          <div class="phone"><div class="phone-screen"><div class="phone-top">Brightside Dental · SMS</div><div class="sms" id="smsConfirm">—</div></div></div>
+          <div class="sms-label">Reminder SMS (24h before)</div>
+          <div class="phone"><div class="phone-screen"><div class="phone-top">Brightside Dental · SMS</div><div class="sms" id="smsReminder">—</div></div></div>
+          <div class="sms-label">Review request (2h after visit)</div>
+          <div class="email-prev" id="reviewPrev">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- chat -->
+<div class="launcher" id="launcher">
+  <div class="launcher-bubble" id="launcherBubble">👋 Hi! Need an appointment? I can book you in 60 seconds.</div>
+  <button class="launcher-btn" id="launcherBtn" aria-label="Open chat">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="ping"></span>
+  </button>
+</div>
+<div class="chat" id="chat" role="dialog" aria-label="Chat with Brightside Dental">
+  <div class="chat-head">
+    <div class="avatar">🦷</div>
+    <div class="t"><b>Brightside Front Desk</b><small><span class="dot" id="chatDot"></span><span id="chatStatus">Online · replies instantly</span><span class="mode-tag" id="modeTag">Rules</span></small></div>
+    <button id="restartChat" title="Restart conversation" aria-label="Restart">↻</button>
+    <button id="closeChat" title="Close" aria-label="Close chat">✕</button>
+  </div>
+  <div class="after-hours" id="afterHours">🌙 The office is closed right now. I can still book you, reschedule or take a message, and staff will follow up when we open.</div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <form class="composer" id="composer" autocomplete="off">
+    <input id="input" placeholder="Type a message…" aria-label="Message">
+    <button type="submit" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg></button>
+  </form>
+  <div class="powered">AI front desk demo · not medical advice</div>
+</div>
+
+<!-- settings -->
+<div class="modal-bg" id="settings">
+  <div class="modal">
+    <h3>Demo settings</h3>
+    <div class="hint">By default the assistant runs on built-in rules (no key needed). Paste an OpenAI API key to let a real LLM answer free-form questions. Bookings still go through the reliable booking flow. The key is kept only in this browser's localStorage.</div>
+    <label for="apiKey">OpenAI API key (optional)</label>
+    <input id="apiKey" type="password" placeholder="sk-...">
+    <label for="model">Model</label>
+    <input id="model" placeholder="gpt-4o-mini">
+    <label class="check"><input type="checkbox" id="forceAfter"> Simulate after-hours (for demos)</label>
+    <div class="row">
+      <button class="btn btn-ghost btn-sm" id="clearKey">Clear key</button>
+      <button class="btn btn-ghost btn-sm" id="closeSettings">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="saveSettings">Save</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+'use strict';
+/* ================= Clinic config (fictional) ================= */
+const CLINIC = {
+  name: 'Brightside Family Dental',
+  short: 'Brightside Dental',
+  phone: '(555) 014-2290',
+  tel: '+15550142290',
+  email: 'hello@brightside-dental.example',
+  address: '1420 Maple Avenue, Suite 200, Springfield, IL 62704',
+  parking: 'Free parking in the lot behind the building; the entrance is step-free.',
+  tz: 'America/Chicago',
+  tzLabel: 'Central Time',
+  // [openMinutes, closeMinutes] per weekday, 0 = Sunday
+  hours: {0: null, 1: [480, 1020], 2: [480, 1020], 3: [480, 1020], 4: [600, 1140], 5: [480, 840], 6: [540, 780]},
+  lunch: [720, 780],
+  reviewLink: 'https://g.page/r/brightside-demo/review',
+  services: [
+    {id: 'cleaning', name: 'Cleaning & exam', dur: 60, icon: '🪥', price: 'From $129 without insurance; usually covered 100% by PPO plans', desc: 'Checkup, gentle cleaning and X-rays when due.', kw: /clean|check ?up|exam|hygien|polish|routine|x-?ray/},
+    {id: 'newpatient', name: 'New patient visit', dur: 60, icon: '👋', price: '$99 new-patient special (exam, X-rays, cleaning) without insurance', desc: 'Full exam, X-rays and a personalised care plan.', kw: /new patient|first (visit|time)|never been/},
+    {id: 'emergency', name: 'Emergency visit', dur: 30, icon: '🚑', price: '$89 emergency exam + X-ray; treatment quoted on the day', desc: 'Same-day help for pain, swelling or broken teeth.', kw: /emergenc|urgent|pain|ache|broke|crack|chip|swell|knock|abscess/},
+    {id: 'filling', name: 'Fillings & repairs', dur: 60, icon: '🦷', price: 'Tooth-coloured fillings from $150 per tooth before insurance', desc: 'Tooth-coloured fillings, crowns and root canals.', kw: /filling|cavit|crown|root canal|repair|bonding/},
+    {id: 'whitening', name: 'Teeth whitening', dur: 90, icon: '✨', price: 'In-office whitening $399; take-home kit $249', desc: 'In-office whitening, up to several shades brighter in one visit.', kw: /whiten|bleach|white teeth|brighter/},
+    {id: 'invisalign', name: 'Invisalign consult', dur: 30, icon: '😁', price: 'Consult is free; treatment from $3,900 with monthly payment options', desc: 'Free consult with a 3D scan of your smile.', kw: /invisalign|aligner|braces|straight|ortho/},
+    {id: 'kids', name: "Kids' dentistry", dur: 45, icon: '🧸', price: "Kids' cleaning from $89 without insurance", desc: 'Friendly first visits, sealants and fluoride.', kw: /kid|child|son|daughter|pediatric|paediatric|baby|toddler/}
+  ],
+  insurance: ['Delta Dental', 'Cigna', 'Aetna', 'MetLife', 'Guardian', 'United Concordia', 'Blue Cross Blue Shield', 'Humana'],
+  membership: 'No insurance? Our Brightside Membership is $29/month: two cleanings, exams and X-rays a year plus 15% off treatment.'
+};
+
+/* ================= Storage ================= */
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('bsd_' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { localStorage.setItem('bsd_' + k, JSON.stringify(v)); }
+};
+let appts = LS.get('appts', []);
+let leads = LS.get('leads', []);
+let settings = LS.get('settings', {apiKey: '', model: 'gpt-4o-mini', forceAfter: false});
+const saveAppts = () => LS.set('appts', appts);
+const saveLeads = () => LS.set('leads', leads);
+
+/* ================= Time helpers (clinic time zone) ================= */
+const pad = n => String(n).padStart(2, '0');
+function clinicNow() {
+  const p = {};
+  new Intl.DateTimeFormat('en-US', {timeZone: CLINIC.tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'})
+    .formatToParts(new Date()).forEach(x => p[x.type] = x.value);
+  const date = `${p.year}-${p.month}-${p.day}`;
+  return {date, mins: (+p.hour % 24) * 60 + +p.minute, dow: dowOf(date)};
+}
+function toUTC(ds) { const [y, m, d] = ds.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); }
+function dowOf(ds) { return toUTC(ds).getUTCDay(); }
+function addDays(ds, n) { const d = toUTC(ds); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function fmtDate(ds, long) { return toUTC(ds).toLocaleDateString('en-US', {timeZone: 'UTC', weekday: long ? 'long' : 'short', month: long ? 'long' : 'short', day: 'numeric'}); }
+function fmtTime(m) { const h = Math.floor(m / 60), mm = m % 60; return `${((h + 11) % 12) + 1}:${pad(mm)} ${h < 12 ? 'AM' : 'PM'}`; }
+function relDay(ds) { const t = clinicNow().date; if (ds === t) return 'Today'; if (ds === addDays(t, 1)) return 'Tomorrow'; return null; }
+function dayLabel(ds) { const r = relDay(ds); return r ? `${r}, ${fmtDate(ds).split(', ')[1]}` : fmtDate(ds); }
+function isOpenNow() {
+  if (settings.forceAfter) return false;
+  const n = clinicNow(); const h = CLINIC.hours[n.dow];
+  return !!h && n.mins >= h[0] && n.mins < h[1];
+}
+function nextOpening() {
+  const n = clinicNow();
+  for (let i = 0; i < 8; i++) {
+    const ds = addDays(n.date, i), h = CLINIC.hours[dowOf(ds)];
+    if (!h) continue;
+    if (i === 0 && n.mins >= h[0]) continue;
+    return `${i === 0 ? 'today' : i === 1 ? 'tomorrow' : fmtDate(ds, true)} at ${fmtTime(h[0])}`;
+  }
+  return 'next business day';
+}
+function hashStr(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+/* ================= Availability ================= */
+function svc(id) { return CLINIC.services.find(s => s.id === id); }
+function slotsFor(ds, serviceId) {
+  const h = CLINIC.hours[dowOf(ds)]; if (!h) return [];
+  const s = svc(serviceId) || {dur: 60};
+  const n = clinicNow(); const out = [];
+  for (let m = h[0]; m + s.dur <= h[1]; m += 30) {
+    if (ds === n.date && m < n.mins + 60) continue;              // need at least 1h notice
+    const dow = dowOf(ds);
+    if (dow >= 1 && dow <= 4 && m < CLINIC.lunch[1] && m + s.dur > CLINIC.lunch[0]) continue; // lunch
+    if (serviceId !== 'emergency' && hashStr(ds + m) % 4 === 0) continue;                   // simulated existing bookings
+    const clash = appts.some(a => a.status === 'booked' && a.date === ds && m < a.time + (svc(a.service)?.dur || 60) && a.time < m + s.dur);
+    if (!clash) out.push(m);
+  }
+  return out;
+}
+function availableDays(serviceId, count = 6, from) {
+  const start = from || clinicNow().date; const out = [];
+  for (let i = 0; i < 60 && out.length < count; i++) { const ds = addDays(start, i); if (slotsFor(ds, serviceId).length) out.push(ds); }
+  return out;
+}
+
+/* ================= NLU (rule/intent based) ================= */
+const norm = t => (t || '').toLowerCase().replace(/[’']/g, "'").trim();
+const INTENTS = [
+  ['severe', /can'?t breathe|trouble breathing|difficulty (breathing|swallowing)|swelling (in|near|around)? ?(my )?(eye|neck|throat)|won'?t stop bleeding|uncontrolled bleeding|high fever|jaw (is )?broken|hit (in|on) the face/],
+  ['cancel', /\bcancel|call off|can'?t make it|cannot make it|won'?t make it/],
+  ['reschedule', /reschedul|move my|change (my )?(appointment|appt|booking|time|date)|different (time|day|date)|push (it|my)|postpone/],
+  ['emergency', /emergenc|urgent|toothache|tooth ache|severe pain|in pain|hurts|pain|swollen|swelling|broke|broken|crack|chipped|knocked out|abscess|bleeding gum|lost (a |my )?(filling|crown)/],
+  ['human', /human|real person|a person|staff|receptionist|speak (to|with)|talk (to|with)|call me|call back|callback|leave a message|message for|front desk|manager/],
+  ['book', /\bbook|appointment|appt|schedule|reserve|see (a |the )?dentist|get (me )?in|come in|slot|opening|availability|available|next (opening|available)|make an? /],
+  ['insurance', /insurance|insured|ppo|hmo|in-?network|out of network|delta|cigna|aetna|metlife|guardian|concordia|blue cross|bcbs|humana|medicaid|medicare|chip\b|coverage|covered|membership|no insurance|uninsured|financ|payment plan|carecredit|pay\b/],
+  ['price', /how much|price|cost|fee|charge|expensive|cheap|afford/],
+  ['hours', /hours|open|close|closing|opening|what time|when are you|weekend|saturday|sunday|today/],
+  ['location', /where|address|location|located|direction|parking|park|find you|map|wheelchair|accessible/],
+  ['services', /service|do you (do|offer|provide)|offer|treat|invisalign|whiten|filling|crown|root canal|implant|veneer|kids|children|pediatric|cleaning|extraction|wisdom/],
+  ['contact', /phone|number|email|contact|reach you/],
+  ['newpatient', /new patient|first visit|what to bring|forms|paperwork/],
+  ['bye', /^(bye|goodbye|see you|that'?s all|no,? thanks|no,? that'?s all|nothing else)/],
+  ['thanks', /thank|thx|appreciate|great|perfect|awesome/],
+  ['greet', /^(hi|hello|hey|hiya|good (morning|afternoon|evening)|yo|howdy)\b/]
+];
+function detectIntent(t) { t = norm(t); for (const [name, re] of INTENTS) if (re.test(t)) return name; return null; }
+function detectService(t) { t = norm(t); return (CLINIC.services.find(s => s.kw.test(t)) || {}).id || null; }
+const DOWS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+function parseDate(t) {
+  t = norm(t); const today = clinicNow().date; const [ty, tm] = today.split('-').map(Number);
+  if (/\btoday\b|\btonight\b/.test(t)) return today;
+  if (/day after tomorrow/.test(t)) return addDays(today, 2);
+  if (/\btomorrow\b|\btmrw\b|\btmr\b/.test(t)) return addDays(today, 1);
+  const wd = DOWS.findIndex(d => new RegExp('\\b' + d.slice(0, 3) + '(' + d.slice(3) + ')?\\b').test(t));
+  if (wd >= 0) { let diff = (wd - dowOf(today) + 7) % 7; if (diff === 0 || /next/.test(t) && diff < 7 && /next week/.test(t)) diff += 7; return addDays(today, diff); }
+  let mon, day, ordinalOnly = false, m;
+  if ((m = t.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(st|nd|rd|th)?\b/))) { mon = MONTHS.indexOf(m[1]) + 1; day = +m[2]; }
+  else if ((m = t.match(/\b(\d{1,2})(st|nd|rd|th)?\s+(of\s+)?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/))) { day = +m[1]; mon = MONTHS.indexOf(m[4]) + 1; }
+  else if ((m = t.match(/\b(\d{1,2})\/(\d{1,2})\b/))) { mon = +m[1]; day = +m[2]; }
+  else if ((m = t.match(/\b(?:the\s+)?(\d{1,2})(st|nd|rd|th)\b/))) { mon = tm; day = +m[1]; ordinalOnly = true; }
+  if (mon && day && mon <= 12 && day <= 31) {
+    let ds = `${ty}-${pad(mon)}-${pad(day)}`;
+    if (ds < today) ds = ordinalOnly ? addMonth(today, day) : `${ty + 1}-${pad(mon)}-${pad(day)}`;
+    return ds;
+  }
+  return null;
+}
+function addMonth(today, day) { const [y, mo] = today.split('-').map(Number); const nm = mo === 12 ? 1 : mo + 1, ny = mo === 12 ? y + 1 : y; return `${ny}-${pad(nm)}-${pad(day)}`; }
+function parseTime(t) {
+  t = norm(t);
+  if (/\bnoon\b/.test(t)) return 720;
+  const m = t.match(/\b(\d{1,2})(?::|\.)?(\d{2})?\s*(am|pm|a\.m\.|p\.m\.|a|p)\b/) || t.match(/\bat\s+(\d{1,2})(?::(\d{2}))?\b/) || t.match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  let h = +m[1]; const mm = m[2] ? +m[2] : 0; const ap = (m[3] || '').replace(/\./g, '');
+  if (h > 23 || mm > 59) return null;
+  if (ap.startsWith('p') && h < 12) h += 12;
+  if (ap.startsWith('a') && h === 12) h = 0;
+  if (!ap && h >= 1 && h <= 6) h += 12;
+  return h * 60 + mm;
+}
+function partOfDay(t) { t = norm(t); if (/morning|\bam\b|early/.test(t)) return 'am'; if (/afternoon|\bpm\b|evening|after work|late/.test(t)) return 'pm'; return null; }
+function parsePhone(t) { const d = (t || '').replace(/\D/g, ''); const x = d.length === 11 && d[0] === '1' ? d.slice(1) : d; return x.length === 10 ? x : null; }
+function fmtPhone(d) { return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`; }
+function parseName(t) {
+  let s = (t || '').trim().replace(/^(my name is|my name's|i am|i'm|im|this is|it's|its|name is|name:)\s+/i, '').replace(/[.!]+$/, '');
+  if (!/^[a-zA-Z\u00C0-\u024F][a-zA-Z\u00C0-\u024F'\- .]{1,48}$/.test(s)) return null;
+  if (s.split(/\s+/).length > 4) return null;
+  if (detectIntent(s) && (!/^[A-Z]/.test(s) || /\b(do|does|you|your|what|how|where|when|can|is|are|take|have)\b/i.test(s))) return null;
+  return s.split(/\s+/).map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+}
+const YES = /^(y|yes|yeah|yep|yup|sure|ok|okay|confirm|correct|that'?s right|sounds good|please do|do it|book it|go ahead)\b/;
+const NO = /^(n|no|nope|nah|not now|change|edit|wrong)\b/;
+
+/* ================= Canned answers ================= */
+function hoursText() {
+  const order = [1, 2, 3, 4, 5, 6, 0];
+  return order.map(d => { const h = CLINIC.hours[d]; return `${DOWS[d][0].toUpperCase() + DOWS[d].slice(1, 3)}: ${h ? fmtTime(h[0]) + ' – ' + fmtTime(h[1]) : 'Closed'}`; }).join('\n');
+}
+function answer(intent, raw) {
+  const t = norm(raw);
+  const open = isOpenNow();
+  switch (intent) {
+    case 'hours':
+      return {text: `Our hours (${CLINIC.tzLabel}):\n${hoursText()}\n\n${open ? "We're open right now." : `We're closed right now. We open ${nextOpening()}, but I can book you in any time.`}`, chips: ['Book an appointment', 'Where are you located?']};
+    case 'location':
+      return {text: `📍 ${CLINIC.address}\n${CLINIC.parking}\n\nCall us at ${CLINIC.phone} if you need directions.`, chips: ['Book an appointment', 'Opening hours']};
+    case 'contact':
+      return {text: `📞 ${CLINIC.phone}\n✉️ ${CLINIC.email}\n${open ? 'The team is in right now.' : `The phones open ${nextOpening()}. Want me to take a message so someone calls you back?`}`, chips: open ? ['Book an appointment'] : ['Leave a message', 'Book an appointment']};
+    case 'insurance': {
+      const hit = CLINIC.insurance.find(i => t.includes(i.toLowerCase().split(' ')[0]));
+      if (/medicaid|medicare|\bchip\b/.test(t)) return {text: `We're not in-network with Medicaid or Medicare dental plans right now, sorry. ${CLINIC.membership}`, chips: ['Tell me about membership', 'Book an appointment']};
+      if (/membership|no insurance|uninsured|don'?t have insurance/.test(t)) return {text: CLINIC.membership + '\n\nWe also offer CareCredit and interest-free payment plans on treatment over $500.', chips: ['Book an appointment', 'Prices']};
+      if (hit) return {text: `Yes, we're in-network with ${hit} PPO plans ✅. Bring your card to the visit and we'll check your benefits before any treatment, so there are no surprises.`, chips: ['Book an appointment', 'Other insurance']};
+      if (/financ|payment plan|carecredit|pay\b/.test(t)) return {text: 'We take all major cards, HSA/FSA cards, and CareCredit, and offer interest-free payment plans on treatment over $500.', chips: ['Book an appointment']};
+      return {text: `We're in-network with most PPO plans, including:\n• ${CLINIC.insurance.join('\n• ')}\n\nNot on the list? We'll still file the claim for you as out-of-network. ${CLINIC.membership}`, chips: ['Book an appointment', 'Prices']};
+    }
+    case 'price': {
+      const s = detectService(t);
+      if (s) return {text: `${svc(s).name}: ${svc(s).price}. With insurance your share is often lower; we confirm it before treatment.`, chips: [`Book ${svc(s).name.toLowerCase()}`, 'Insurance we accept']};
+      return {text: 'Typical prices before insurance:\n' + CLINIC.services.map(s => `• ${s.name}: ${s.price.split(';')[0]}`).join('\n') + '\n\nExact costs depend on the exam; we always quote before treatment.', chips: ['Book an appointment', 'Insurance we accept']};
+    }
+    case 'services': {
+      const s = detectService(t);
+      if (/implant|veneer|extraction|wisdom|root canal/.test(t) && !s) return {text: 'Yes, we do that. It starts with an exam so the dentist can check what you need and give you a written quote.', chips: ['Book an appointment']};
+      if (s) return {text: `Yes, we offer ${svc(s).name.toLowerCase()}. ${svc(s).desc}\n💲 ${svc(s).price}.`, chips: [`Book ${svc(s).name.toLowerCase()}`, 'Insurance we accept']};
+      return {text: 'Here is what we offer:\n' + CLINIC.services.map(s => `${s.icon} ${s.name}`).join('\n') + '\n\nWhich one can I help you with?', chips: CLINIC.services.slice(0, 4).map(s => `Book ${s.name.toLowerCase()}`)};
+    }
+    case 'newpatient':
+      return {text: "Welcome! For your first visit, bring a photo ID, your insurance card and a list of any medications. We'll text you a link to fill in the forms online so check-in takes two minutes. New patients without insurance get the $99 special (exam, X-rays and cleaning).", chips: ['Book a new patient visit', 'Insurance we accept']};
+    case 'thanks':
+      return {text: "You're welcome! Anything else I can help with?", chips: ['Book an appointment', 'No, that\'s all']};
+    case 'bye':
+      return {text: `Have a great day! 😊 If you need us, I'm here 24/7, or call ${CLINIC.phone}.`};
+    case 'greet':
+      return {text: 'Hi there! 👋 How can I help today?', chips: MAIN_CHIPS};
+  }
+  return null;
+}
+const MAIN_CHIPS = ['Book an appointment', 'Reschedule / cancel', 'Insurance we accept', 'Opening hours', 'I have a dental emergency'];
+
+/* ================= Chat UI ================= */
+const $ = s => document.querySelector(s);
+const msgsEl = $('#msgs');
+let busy = false;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+function fmtMsg(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>'); }
+function scrollDown() { msgsEl.scrollTop = msgsEl.scrollHeight; }
+function addMsg(text, who) { const d = document.createElement('div'); d.className = 'msg ' + who; d.innerHTML = fmtMsg(text); msgsEl.appendChild(d); scrollDown(); return d; }
+function disableChips() { msgsEl.querySelectorAll('.chips .chip').forEach(b => b.disabled = true); }
+function addChips(chips, cls) {
+  if (!chips || !chips.length) return;
+  const w = document.createElement('div'); w.className = 'chips';
+  chips.forEach(c => {
+    const o = typeof c === 'string' ? {label: c, value: c} : c;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (cls ? ' ' + cls : ''); b.textContent = o.label;
+    b.dataset.value = o.value;
+    b.onclick = () => { if (busy) return; disableChips(); userSay(o.label, o.value); };
+    w.appendChild(b);
+  });
+  msgsEl.appendChild(w); scrollDown();
+}
+function addCard(html, cls) { const d = document.createElement('div'); d.className = 'summary ' + (cls || ''); d.innerHTML = html; msgsEl.appendChild(d); scrollDown(); return d; }
+function typing() { const d = document.createElement('div'); d.className = 'msg bot typing'; d.innerHTML = '<i></i><i></i><i></i>'; msgsEl.appendChild(d); scrollDown(); return d; }
+const FAST = /[?&]fast=1/.test(location.search);
+async function botSay(items) {
+  busy = true;
+  for (const it of [].concat(items)) {
+    if (!it) continue;
+    const ty = typing();
+    await new Promise(r => setTimeout(r, FAST ? 30 : Math.min(900, 280 + (it.text || '').length * 6)));
+    ty.remove();
+    if (it.card) addCard(it.card, it.cardCls);
+    if (it.text) addMsg(it.text, 'bot');
+    if (it.chips) addChips(it.chips, it.chipCls);
+  }
+  busy = false;
+}
+function userSay(label, value) { addMsg(label, 'user'); handle(value ?? label); }
+
+/* ================= Conversation engine ================= */
+let S = {flow: null, step: null, d: {}};
+const reset = () => { S = {flow: null, step: null, d: {}}; };
+let history = [];
+
+async function handle(raw) {
+  const t = norm(raw);
+  history.push({role: 'user', content: raw});
+  if (!t) return;
+  // global escapes
+  if (!S.flow && t === 'reschedule / cancel') return botSay({text: 'Sure. Do you want to move your appointment or cancel it?', chips: ['Reschedule', 'Cancel my appointment']});
+  if (S.flow && (/^(start over|restart|stop|never ?mind|forget it|exit|main menu|menu)\b/.test(t) || (S.flow === 'book' && !S.d.rescheduleOf && /^cancel( (this|that|the booking|booking))?$/.test(t)))) {
+    reset(); return botSay({text: 'No problem, I\'ve stopped that. What would you like to do?', chips: MAIN_CHIPS});
+  }
+  const intent = detectIntent(t);
+  if (intent === 'severe') { reset(); return botSay(severe()); }
+  if (S.flow) {
+    const r = await FLOWS[S.flow][S.step](raw, t);
+    if (r !== false) return;
+    // step could not parse input: maybe a side question
+    if (intent && !['book', 'greet', 'thanks'].includes(intent) && answer(intent, raw)) {
+      const a = answer(intent, raw);
+      await botSay({text: a.text});
+      return reprompt('Back to your ' + (S.flow === 'book' ? 'booking' : S.flow) + ':');
+    }
+    if (settings.apiKey && t.length > 3) { const ok = await llmAnswer(raw); if (ok) return reprompt('Back to your ' + (S.flow === 'book' ? 'booking' : S.flow) + ':'); }
+    if (S.flow === 'book' && S.step === 'name') return botSay({text: "Could you type the patient's first and last name? (letters only)"});
+    if (S.flow === 'book' && S.step === 'phone') return botSay({text: "That doesn't look like a US mobile number. Please type 10 digits, e.g. 312 555 0198."});
+    return reprompt("Sorry, I didn't catch that.");
+  }
+  return route(intent, raw, t);
+}
+async function route(intent, raw, t) {
+  switch (intent) {
+    case 'book': return startBooking(raw);
+    case 'reschedule': return startLookup('reschedule');
+    case 'cancel': return startLookup('cancel');
+    case 'emergency': return emergency(raw);
+    case 'human': return startHandoff();
+  }
+  if (/^reschedule \/ cancel$/.test(t)) return botSay({text: 'Sure. Do you want to move your appointment or cancel it?', chips: ['Reschedule', 'Cancel my appointment']});
+  if (/^book /.test(t) || /^(cleaning|whitening|invisalign)/.test(t)) return startBooking(raw);
+  if (/^other insurance$/.test(t)) return botSay({text: 'Which plan do you have? Type the name and I\'ll check.'});
+  if (/^(leave a message)$/.test(t)) return startHandoff();
+  if (/^prices$/.test(t)) return botSay(answer('price', ''));
+  if (/^tell me about membership$/.test(t)) return botSay(answer('insurance', 'membership'));
+  const svcHit = detectService(t);
+  if (settings.apiKey) { const ok = await llmAnswer(raw); if (ok) return; }
+  const a = answer(intent, raw);
+  if (a) return botSay(a);
+  if (svcHit) return botSay(answer('services', raw));
+  return botSay({text: "I'm the clinic's virtual front desk. I can book, move or cancel appointments, answer questions about insurance, hours, prices and services, or pass a message to the team. What do you need?", chips: MAIN_CHIPS});
+}
+function severe() {
+  return {text: `⚠️ That sounds like it could be serious. If you have trouble breathing or swallowing, swelling spreading to your eye or neck, or bleeding that won't stop, **call 911 or go to the nearest ER now**.\n\nFor other dental emergencies call us at ${CLINIC.phone}${isOpenNow() ? '' : ' (our after-hours line forwards to the on-call dentist)'}.`, chips: ['Book an emergency visit', 'Leave a message']};
+}
+async function emergency(raw) {
+  await botSay({text: `I'm sorry you're dealing with that 😟. We keep same-day slots for emergencies.\n\nWhile you wait: rinse with warm salt water, take an over-the-counter pain reliever as directed on the pack, and use a cold compress on the cheek. If a tooth was knocked out, keep it in milk and come in within the hour.\n\n${isOpenNow() ? `For the fastest help you can also call ${CLINIC.phone}.` : `We're closed right now. The after-hours line ${CLINIC.phone} forwards to the on-call dentist.`}`});
+  S = {flow: 'book', step: 'patient', d: {service: 'emergency'}};
+  return botSay(promptFor('patient'));
+}
+
+/* ---------- Booking flow ---------- */
+function startBooking(raw) {
+  const d = {};
+  const s = detectService(raw); if (s) d.service = s;
+  const ds = parseDate(raw); if (ds) d.date = ds;
+  const tm = parseTime(raw); if (tm != null) d.wantTime = tm;
+  const pod = partOfDay(raw); if (pod) d.pod = pod;
+  S = {flow: 'book', step: null, d};
+  return nextBookingStep();
+}
+function nextBookingStep(prefix) {
+  const d = S.d;
+  let step;
+  if (!d.service) step = 'service';
+  else if (!d.patient) step = 'patient';
+  else if (!d.date) step = 'date';
+  else if (d.time == null) step = 'time';
+  else if (!d.name) step = 'name';
+  else if (!d.phone) step = 'phone';
+  else if (!d.insurance) step = 'insurance';
+  else step = 'confirm';
+  S.step = step;
+  const p = promptFor(step);
+  if (prefix) p.text = prefix + '\n\n' + p.text;
+  return botSay(p);
+}
+function promptFor(step) {
+  const d = S.d;
+  switch (step) {
+    case 'service': return {text: 'Happy to get you booked! 🗓️ What is the visit for?', chips: CLINIC.services.map(s => ({label: `${s.icon} ${s.name}`, value: 'svc:' + s.id}))};
+    case 'patient': return {text: `${svc(d.service).name}, got it. Have you visited us before?`, chips: [{label: "I'm a new patient", value: 'pt:new'}, {label: "I've been before", value: 'pt:existing'}]};
+    case 'date': {
+      const days = availableDays(d.service, 6);
+      return {text: `Here are the next days with openings for ${svc(d.service).name.toLowerCase()}. Pick one, or type a date (e.g. "next Tuesday" or "Nov 20").`, chips: days.map(ds => ({label: dayLabel(ds), value: 'date:' + ds}))};
+    }
+    case 'time': {
+      let sl = slotsFor(d.date, d.service);
+      if (d.pod === 'am') sl = sl.filter(m => m < 720).concat(sl.filter(m => m >= 720)); else if (d.pod === 'pm') sl = sl.filter(m => m >= 720).concat(sl.filter(m => m < 720));
+      return {text: `Available times on ${fmtDate(d.date, true)} (${CLINIC.tzLabel}):`, chips: sl.slice(0, 9).map(m => ({label: fmtTime(m), value: 'time:' + m})).concat([{label: 'Another day', value: 'time:other'}]), chipCls: 'slot'};
+    }
+    case 'name': return {text: `Great, I'm holding **${fmtTime(d.time)} on ${fmtDate(d.date, true)}** for you. What's the patient's full name?`};
+    case 'phone': return {text: `Thanks, ${d.name.split(' ')[0]}! What's the best mobile number? We'll text your confirmation and a reminder the day before.`};
+    case 'insurance': return {text: 'Last one: do you have dental insurance? (Optional, it helps us check your benefits in advance.)', chips: CLINIC.insurance.slice(0, 6).map(i => ({label: i, value: 'ins:' + i})).concat([{label: 'Other plan', value: 'ins:Other'}, {label: 'No insurance', value: 'ins:None'}, {label: 'Skip', value: 'ins:Not given'}])};
+    case 'confirm': return {card: summaryCard(d, 'Please confirm your appointment', false), text: 'Does everything look right?', chips: [{label: '✅ Confirm booking', value: 'confirm:yes'}, {label: 'Change something', value: 'confirm:no'}]};
+  }
+}
+function summaryCard(d, title, done, cls) {
+  return `<div class="sh"><span class="ck">${cls === 'cancel' ? '✕' : done ? '✓' : '…'}</span>${esc(title)}</div>
+  <dl>${d.ref ? `<dt>Ref</dt><dd data-ref>${esc(d.ref)}</dd>` : ''}
+  <dt>Service</dt><dd>${esc(svc(d.service).name)}</dd>
+  <dt>When</dt><dd>${esc(fmtDate(d.date, true))}, ${esc(fmtTime(d.time))}</dd>
+  <dt>Patient</dt><dd>${esc(d.name)}${d.patient === 'new' ? ' (new)' : ''}</dd>
+  <dt>Mobile</dt><dd>${esc(fmtPhone(d.phone))}</dd>
+  ${d.insurance ? `<dt>Insurance</dt><dd>${esc(d.insurance)}</dd>` : ''}
+  <dt>Where</dt><dd>${esc(CLINIC.address)}</dd></dl>` + (done && cls !== 'cancel' ? `<div class="sf"><button class="chip" data-ics="${esc(d.ref)}">📅 Add to calendar</button><a class="chip" href="tel:${CLINIC.tel}">📞 Call clinic</a></div>` : '');
+}
+const FLOWS = {book: {}, lookup: {}, handoff: {}};
+FLOWS.book.service = async (raw, t) => {
+  const id = t.startsWith('svc:') ? raw.slice(4) : detectService(t);
+  if (!id || !svc(id)) return false;
+  S.d.service = id; return nextBookingStep();
+};
+FLOWS.book.patient = async (raw, t) => {
+  if (t === 'pt:new' || /new|first|never/.test(t)) S.d.patient = 'new';
+  else if (t === 'pt:existing' || /before|existing|returning|yes|been|regular/.test(t)) S.d.patient = 'existing';
+  else if (/^no\b/.test(t)) S.d.patient = 'new';
+  else return false;
+  if (S.d.patient === 'new' && S.d.service === 'cleaning') S.d.service = 'newpatient';
+  return nextBookingStep(S.d.patient === 'new' ? 'Welcome to Brightside! 🎉' : 'Welcome back!');
+};
+FLOWS.book.date = async (raw, t) => {
+  let ds = t.startsWith('date:') ? raw.slice(5) : parseDate(raw);
+  if (!ds) { const pod = partOfDay(raw); if (pod) { S.d.pod = pod; return botSay(promptFor('date')); } return false; }
+  if (ds < clinicNow().date) return botSay({text: 'That date has already passed. Please pick an upcoming day:', chips: promptFor('date').chips});
+  const tm = parseTime(raw); if (tm != null && !t.startsWith('date:')) S.d.wantTime = tm;
+  if (!CLINIC.hours[dowOf(ds)]) return botSay({text: `We're closed on ${DOWS[dowOf(ds)][0].toUpperCase() + DOWS[dowOf(ds)].slice(1)}s. Here are the nearest days with openings:`, chips: availableDays(S.d.service, 6, ds).map(x => ({label: dayLabel(x), value: 'date:' + x}))});
+  if (!slotsFor(ds, S.d.service).length) return botSay({text: `${fmtDate(ds, true)} is fully booked, sorry. The nearest days with openings:`, chips: availableDays(S.d.service, 6, ds).map(x => ({label: dayLabel(x), value: 'date:' + x}))});
+  S.d.date = ds;
+  if (S.d.wantTime != null) return tryTime(S.d.wantTime);
+  return nextBookingStep();
+};
+function tryTime(m) {
+  const sl = slotsFor(S.d.date, S.d.service);
+  delete S.d.wantTime;
+  if (sl.includes(m)) { S.d.time = m; return nextBookingStep(); }
+  const near = sl.slice().sort((a, b) => Math.abs(a - m) - Math.abs(b - m)).slice(0, 3).sort((a, b) => a - b);
+  S.step = 'time';
+  return botSay({text: `${fmtTime(m)} isn't available on ${fmtDate(S.d.date)}. The closest openings are:`, chips: near.map(x => ({label: fmtTime(x), value: 'time:' + x})).concat([{label: 'See all times', value: 'time:all'}, {label: 'Another day', value: 'time:other'}]), chipCls: 'slot'});
+}
+FLOWS.book.time = async (raw, t) => {
+  if (t === 'time:other' || /another day|different day|other day/.test(t)) { delete S.d.date; return nextBookingStep(); }
+  if (t === 'time:all') return botSay(promptFor('time'));
+  if (t.startsWith('time:')) { S.d.time = +t.slice(5); return nextBookingStep(); }
+  const ds = parseDate(raw); if (ds && ds !== S.d.date) { delete S.d.date; return FLOWS.book.date(raw, t); }
+  const m = parseTime(raw);
+  if (m == null) { const pod = partOfDay(raw); if (pod) { S.d.pod = pod; return botSay(promptFor('time')); } return false; }
+  return tryTime(m);
+};
+FLOWS.book.name = async (raw) => { const n = parseName(raw); if (!n) return false; S.d.name = n; return nextBookingStep(); };
+FLOWS.book.phone = async (raw) => { const p = parsePhone(raw); if (!p) return false; S.d.phone = p; return nextBookingStep(); };
+FLOWS.book.insurance = async (raw, t) => {
+  if (t.startsWith('ins:')) S.d.insurance = raw.slice(4);
+  else { const hit = CLINIC.insurance.find(i => t.includes(i.toLowerCase().split(' ')[0])); S.d.insurance = hit || (/no|none|don'?t/.test(t) ? 'None' : /skip/.test(t) ? 'Not given' : raw.trim().slice(0, 40)); }
+  return nextBookingStep(S.d.insurance === 'None' ? 'No problem. Ask us about the $29/month Brightside Membership at your visit.' : null);
+};
+FLOWS.book.confirm = async (raw, t) => {
+  if (t === 'confirm:yes' || YES.test(t)) return finalizeBooking();
+  if (t === 'confirm:no' || NO.test(t)) { S.step = 'edit'; return botSay({text: 'What would you like to change?', chips: [{label: 'Service', value: 'edit:service'}, {label: 'Date & time', value: 'edit:date'}, {label: 'Time only', value: 'edit:time'}, {label: 'Name', value: 'edit:name'}, {label: 'Phone', value: 'edit:phone'}]}); }
+  return false;
+};
+FLOWS.book.edit = async (raw, t) => {
+  const k = t.startsWith('edit:') ? t.slice(5) : /serv/.test(t) ? 'service' : /date|day/.test(t) ? 'date' : /time/.test(t) ? 'time' : /name/.test(t) ? 'name' : /phone|number/.test(t) ? 'phone' : null;
+  if (!k) return false;
+  if (k === 'service') { delete S.d.service; delete S.d.date; delete S.d.time; }
+  if (k === 'date') { delete S.d.date; delete S.d.time; }
+  if (k === 'time') delete S.d.time;
+  if (k === 'name') delete S.d.name;
+  if (k === 'phone') delete S.d.phone;
+  return nextBookingStep();
+};
+function newRef() { const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let r = 'BSD-'; for (let i = 0; i < 4; i++) r += c[Math.floor(Math.random() * c.length)]; return r; }
+async function finalizeBooking() {
+  const d = S.d;
+  if (!slotsFor(d.date, d.service).includes(d.time)) { delete d.time; S.step = 'time'; return botSay({text: 'Sorry, that slot was just taken. Here are the remaining times:', chips: promptFor('time').chips, chipCls: 'slot'}); }
+  const after = !isOpenNow();
+  if (d.rescheduleOf) {
+    const a = appts.find(x => x.ref === d.rescheduleOf);
+    a.history = (a.history || []).concat([{from: `${a.date} ${a.time}`, at: Date.now()}]);
+    a.date = d.date; a.time = d.time; a.status = 'booked'; a.rescheduled = true; a.updatedAt = Date.now();
+    saveAppts(); renderDash();
+    const ref = a.ref; reset();
+    return botSay([{card: summaryCard(a, 'Appointment moved', true)}, {text: `Done! Your appointment is now ${fmtDate(a.date, true)} at ${fmtTime(a.time)}. We've texted the new details to ${fmtPhone(a.phone)}.`, chips: ['Thanks!', 'Insurance we accept']}]);
+  }
+  const a = {ref: newRef(), service: d.service, patient: d.patient, date: d.date, time: d.time, name: d.name, phone: d.phone, insurance: d.insurance, status: 'booked', afterHours: after, createdAt: Date.now(), source: 'Website chat'};
+  appts.push(a); saveAppts(); renderDash(); reset();
+  return botSay([{card: summaryCard(a, "You're booked!", true)}, {text: `All set, ${a.name.split(' ')[0]}! 🎉 Your reference is **${a.ref}**. A confirmation text is on its way to ${fmtPhone(a.phone)}, and we'll remind you 24 hours before.${a.patient === 'new' ? '\n\nWe\'ll also text a link to fill in your new-patient forms online.' : ''}\n\nNeed to change it later? Just tell me "reschedule" or "cancel".`, chips: ['Thanks!', 'Where are you located?']}]);
+}
+
+/* ---------- Reschedule / cancel ---------- */
+function startLookup(kind) {
+  S = {flow: 'lookup', step: 'find', d: {kind}};
+  const recent = appts.filter(a => a.status === 'booked' && a.date >= clinicNow().date);
+  return botSay({text: `Sure, I can ${kind === 'cancel' ? 'cancel' : 'move'} that for you. What's the mobile number on the booking, or your reference (e.g. BSD-7K2Q)?`, chips: recent.length === 1 ? [{label: `Use ${fmtPhone(recent[0].phone)}`, value: recent[0].phone}] : null});
+}
+FLOWS.lookup.find = async (raw, t) => {
+  const ref = (raw.match(/bsd-?[a-z0-9]{4}/i) || [])[0];
+  const ph = parsePhone(raw);
+  if (!ref && !ph) return false;
+  const today = clinicNow().date;
+  const list = appts.filter(a => a.status === 'booked' && a.date >= today && (ref ? a.ref.replace('-', '').toLowerCase() === ref.replace('-', '').toLowerCase() : a.phone === ph));
+  if (!list.length) { reset(); return botSay({text: `I couldn't find an upcoming appointment for ${ref ? ref.toUpperCase() : fmtPhone(ph)}. Want to book a new one, or leave a message for the team?`, chips: ['Book an appointment', 'Leave a message']}); }
+  if (list.length === 1) return pickAppt(list[0]);
+  S.step = 'pick';
+  return botSay({text: 'I found a few appointments. Which one?', chips: list.map(a => ({label: `${svc(a.service).name} · ${fmtDate(a.date)} ${fmtTime(a.time)}`, value: 'ref:' + a.ref}))});
+};
+FLOWS.lookup.pick = async (raw, t) => { const ref = t.startsWith('ref:') ? raw.slice(4) : null; const a = appts.find(x => x.ref === ref); if (!a) return false; return pickAppt(a); };
+function pickAppt(a) {
+  S.d.ref = a.ref;
+  if (S.d.kind === 'cancel') {
+    S.step = 'confirmCancel';
+    return botSay({text: `I found **${svc(a.service).name}** for ${a.name} on **${fmtDate(a.date, true)} at ${fmtTime(a.time)}**. Cancel it?`, chips: [{label: 'Yes, cancel it', value: 'cc:yes'}, {label: 'Reschedule instead', value: 'cc:move'}, {label: 'Keep it', value: 'cc:keep'}]});
+  }
+  S = {flow: 'book', step: null, d: {service: a.service, patient: a.patient || 'existing', name: a.name, phone: a.phone, insurance: a.insurance || 'Not given', rescheduleOf: a.ref}};
+  return nextBookingStep(`Found it: **${svc(a.service).name}** on ${fmtDate(a.date, true)} at ${fmtTime(a.time)}. Let's find a new time.`);
+}
+FLOWS.lookup.confirmCancel = async (raw, t) => {
+  const a = appts.find(x => x.ref === S.d.ref);
+  if (t === 'cc:move' || /reschedul|move/.test(t)) { S.d.kind = 'reschedule'; return pickAppt(a); }
+  if (t === 'cc:keep' || NO.test(t) || /keep/.test(t)) { reset(); return botSay({text: "Okay, your appointment stays as it is. See you then! 😊"}); }
+  if (t === 'cc:yes' || YES.test(t)) {
+    a.status = 'cancelled'; a.updatedAt = Date.now(); saveAppts(); renderDash(); reset();
+    return botSay([{card: summaryCard(a, 'Appointment cancelled', true, 'cancel'), cardCls: 'cancel'}, {text: 'Your appointment has been cancelled and the slot released. Would you like to book a new time?', chips: ['Book an appointment', "No, that's all"]}]);
+  }
+  return false;
+};
+
+/* ---------- Handoff to staff ---------- */
+function startHandoff() {
+  S = {flow: 'handoff', step: 'name', d: {}};
+  return botSay({text: `I'll pass this to our front-desk team${isOpenNow() ? '. They usually call back within the hour' : `. We're closed now, so they'll call you back when we open ${nextOpening()}`}. What's your name?`});
+}
+FLOWS.handoff.name = async raw => { const n = parseName(raw); if (!n) return botSay({text: 'Could you type your first and last name?'}); S.d.name = n; S.step = 'phone'; return botSay({text: 'And the best number to reach you?'}); };
+FLOWS.handoff.phone = async raw => { const p = parsePhone(raw); if (!p) return botSay({text: 'Please type a 10-digit US number.'}); S.d.phone = p; S.step = 'msg'; return botSay({text: 'What should I tell the team? (One or two lines is perfect.)'}); };
+FLOWS.handoff.msg = async raw => {
+  const l = {id: Date.now(), name: S.d.name, phone: S.d.phone, message: raw.trim().slice(0, 300), afterHours: !isOpenNow(), at: Date.now()};
+  leads.unshift(l); saveLeads(); renderDash(); reset();
+  return botSay({text: `Got it, ${l.name.split(' ')[0]}. Your message is with the team and they'll call ${fmtPhone(l.phone)} ${l.afterHours ? `when we open ${nextOpening()}` : 'shortly'}. 👍`, chips: ['Book an appointment', "No, that's all"]});
+};
+
+function reprompt(prefix) {
+  const p = promptFor(S.step) || (S.flow === 'lookup' ? {text: 'What is the mobile number or reference on the booking?'} : S.flow === 'handoff' ? {text: 'Please continue with the details above.'} : {text: ''});
+  if (S.flow === 'lookup' && S.step !== 'find') return botSay({text: prefix + ' Please choose one of the options above.'});
+  if (S.flow === 'handoff') { const q = {name: 'What\'s your name?', phone: 'What\'s the best number to reach you?', msg: 'What should I tell the team?'}[S.step]; return botSay({text: `${prefix} ${q}`}); }
+  if (S.flow === 'book' && S.step === 'edit') return botSay({text: prefix + ' What would you like to change?', chips: [{label: 'Date & time', value: 'edit:date'}, {label: 'Name', value: 'edit:name'}, {label: 'Phone', value: 'edit:phone'}]});
+  if (!p.text && S.flow === 'lookup') return botSay({text: prefix + ' What is the mobile number or reference on the booking?'});
+  p.text = `${prefix} ${p.text}`; return botSay(p);
+}
+
+/* ---------- Optional LLM (OpenAI) ---------- */
+function systemPrompt() {
+  return `You are the friendly virtual front desk for ${CLINIC.name} (a dental clinic). Answer in 1-4 short sentences, warm and plain. Use ONLY these facts; if unsure, offer to pass a message to staff or suggest calling ${CLINIC.phone}. Never give a diagnosis or medical advice beyond basic first aid; for severe symptoms tell them to call 911.
+Address: ${CLINIC.address}. ${CLINIC.parking}
+Hours (${CLINIC.tzLabel}): ${hoursText().replace(/\n/g, '; ')}. Currently ${isOpenNow() ? 'open' : 'closed'}.
+Phone: ${CLINIC.phone}. Email: ${CLINIC.email}.
+Services and prices: ${CLINIC.services.map(s => `${s.name} (${s.price})`).join('; ')}.
+Insurance (in-network PPO): ${CLINIC.insurance.join(', ')}. Not in-network with Medicaid/Medicare. ${CLINIC.membership} CareCredit and payment plans over $500.
+If the user wants to book, reschedule or cancel, reply briefly and end with the token [BOOK], [RESCHEDULE] or [CANCEL] so the app can start that flow.`;
+}
+async function llmAnswer(raw) {
+  const ty = typing();
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + settings.apiKey},
+      body: JSON.stringify({model: settings.model || 'gpt-4o-mini', temperature: 0.3, max_tokens: 220, messages: [{role: 'system', content: systemPrompt()}].concat(history.slice(-8))})
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json(); let txt = (j.choices?.[0]?.message?.content || '').trim();
+    ty.remove(); if (!txt) return false;
+    const tok = (txt.match(/\[(BOOK|RESCHEDULE|CANCEL)\]/) || [])[1];
+    txt = txt.replace(/\[(BOOK|RESCHEDULE|CANCEL)\]/g, '').trim();
+    history.push({role: 'assistant', content: txt});
+    if (txt) addMsg(txt, 'bot');
+    if (tok && !S.flow) { if (tok === 'BOOK') await startBooking(raw); else await startLookup(tok === 'CANCEL' ? 'cancel' : 'reschedule'); }
+    return true;
+  } catch (e) {
+    ty.remove(); addMsg('AI mode unavailable (' + e.message + '); using built-in answers.', 'sys'); return false;
+  }
+}
+
+/* ---------- Chat open/close ---------- */
+const chat = $('#chat');
+let started = false;
+async function openChat(intent) {
+  chat.classList.add('open'); $('#launcherBubble').style.display = 'none'; $('.launcher-btn .ping')?.remove();
+  if (window.innerWidth <= 600) $('#launcher').style.display = 'none';
+  if (!started) { started = true; await greet(); }
+  if (intent === 'book' && !S.flow) { addMsg('I\'d like to book an appointment', 'user'); await handle('book an appointment'); }
+  if (intent === 'emergency' && !S.flow) { addMsg('I have a dental emergency', 'user'); await handle('I have a dental emergency'); }
+  if (window.innerWidth > 600) $('#input').focus();
+}
+function closeChat() { chat.classList.remove('open'); $('#launcher').style.display = ''; }
+async function greet() {
+  const open = isOpenNow();
+  await botSay({text: `Hi! 👋 I'm Brightside's virtual front desk. ${open ? 'I can book you in, answer questions, or connect you with the team.' : `We're closed right now (we open ${nextOpening()}), but I can still book your appointment or take a message.`}`, chips: MAIN_CHIPS});
+}
+$('#launcherBtn').onclick = () => chat.classList.contains('open') ? closeChat() : openChat();
+$('#launcherBubble').onclick = () => openChat();
+$('#closeChat').onclick = closeChat;
+$('#restartChat').onclick = async () => { msgsEl.innerHTML = ''; reset(); history = []; await greet(); };
+document.querySelectorAll('[data-open-chat]').forEach(b => b.onclick = () => openChat(b.dataset.openChat));
+$('#composer').onsubmit = e => { e.preventDefault(); const v = $('#input').value.trim(); if (!v || busy) return; $('#input').value = ''; disableChips(); userSay(v); };
+msgsEl.addEventListener('click', e => { const b = e.target.closest('[data-ics]'); if (b) downloadICS(appts.find(a => a.ref === b.dataset.ics)); });
+
+function downloadICS(a) {
+  if (!a) return;
+  const dt = (ds, m) => ds.replace(/-/g, '') + 'T' + pad(Math.floor(m / 60)) + pad(m % 60) + '00';
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Brightside Demo//EN', 'BEGIN:VEVENT', `UID:${a.ref}@brightside-demo`, `DTSTART;TZID=${CLINIC.tz}:${dt(a.date, a.time)}`, `DTEND;TZID=${CLINIC.tz}:${dt(a.date, a.time + svc(a.service).dur)}`, `SUMMARY:${svc(a.service).name} - ${CLINIC.short}`, `LOCATION:${CLINIC.address.replace(/,/g, '\\,')}`, `DESCRIPTION:Ref ${a.ref}. Call ${CLINIC.phone} to change.`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const url = URL.createObjectURL(new Blob([ics], {type: 'text/calendar'}));
+  const l = document.createElement('a'); l.href = url; l.download = `brightside-${a.ref}.ics`; l.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast('Calendar file downloaded');
+}
+
+/* ================= Site rendering ================= */
+function renderSite() {
+  $('#yr').textContent = new Date().getFullYear();
+  $('#svcGrid').innerHTML = CLINIC.services.filter(s => s.id !== 'newpatient').map(s => `<div class="card"><div class="svc-ic">${s.icon}</div><h4>${s.name}</h4><p>${s.desc}</p><div class="price">${s.price.split(';')[0]}</div></div>`).join('');
+  $('#insList').innerHTML = CLINIC.insurance.map(i => `<span>${i}</span>`).join('') + '<span>+ Membership plan</span>';
+  const today = clinicNow().dow;
+  $('#hoursTbl').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => { const h = CLINIC.hours[d]; return `<tr class="${d === today ? 'today' : ''}"><td>${DOWS[d][0].toUpperCase() + DOWS[d].slice(1)}${d === today ? ' (today)' : ''}</td><td>${h ? fmtTime(h[0]) + ' – ' + fmtTime(h[1]) : 'Closed'}</td></tr>`; }).join('');
+  $('#addr').innerHTML = `<p style="margin:0 0 6px;font-weight:600">${CLINIC.address}</p><p style="margin:0;color:var(--muted);font-size:14px">${CLINIC.parking}<br>📞 ${CLINIC.phone} · ✉️ ${CLINIC.email}</p>`;
+  const open = isOpenNow();
+  $('#openDot').className = 'dot' + (open ? '' : ' closed'); $('#openText').textContent = open ? 'Open now · ' + CLINIC.tzLabel : `Closed now · opens ${nextOpening()}`;
+  $('#chatDot').className = 'dot' + (open ? '' : ' closed'); $('#chatStatus').textContent = open ? 'Online · replies instantly' : 'After hours · still booking 24/7';
+  $('#afterHours').classList.toggle('show', !open);
+  $('#modeTag').textContent = settings.apiKey ? 'AI' : 'Rules';
+  const nd = availableDays('cleaning', 1)[0];
+  if (nd) { $('#nextDayLabel').textContent = `${dayLabel(nd)} · cleaning & exam`; $('#slotPreview').innerHTML = slotsFor(nd, 'cleaning').slice(0, 6).map(m => `<span>${fmtTime(m)}</span>`).join(''); }
+}
+
+/* ================= Dashboard ================= */
+let selRef = null;
+function smsConfirm(a) { return `${CLINIC.short}: Hi ${a.name.split(' ')[0]}, you're booked for ${svc(a.service).name} on ${fmtDate(a.date)} at ${fmtTime(a.time)}. Ref ${a.ref}. ${CLINIC.address.split(',')[0]}. Reply C to confirm, R to reschedule.`; }
+function smsReminder(a) { return `Reminder from ${CLINIC.short}: ${a.name.split(' ')[0]}, see you tomorrow (${fmtDate(a.date)}) at ${fmtTime(a.time)} for your ${svc(a.service).name.toLowerCase()}. Reply C to confirm or R to reschedule. Running late? Call ${CLINIC.phone}.`; }
+function reviewMsg(a) { return `Subject: How was your visit, ${a.name.split(' ')[0]}?\n\nHi ${a.name.split(' ')[0]},\n\nThanks for visiting ${CLINIC.name} today. If we took good care of you, would you leave us a quick Google review? It takes 30 seconds and helps local families find us:\n${CLINIC.reviewLink}\n\nAnything we could do better? Just reply to this message and it goes straight to our office manager.\n\n- The Brightside team`; }
+function renderDash() {
+  const today = clinicNow().date;
+  const sorted = appts.slice().sort((a, b) => (a.date + pad(a.time)).localeCompare(b.date + pad(b.time)));
+  const tb = $('#apptTbl tbody');
+  tb.innerHTML = sorted.map(a => `<tr data-ref="${a.ref}" class="${a.ref === selRef ? 'sel' : ''}"><td><b>${fmtDate(a.date)}</b><br><small style="color:var(--muted)">${fmtTime(a.time)}</small></td><td>${esc(a.name)}<br><small style="color:var(--muted)">${fmtPhone(a.phone)}${a.afterHours ? ' · 🌙 after hours' : ''}</small></td><td class="hide-sm">${svc(a.service).name}<br><small style="color:var(--muted)">${esc(a.ref)}${a.insurance && a.insurance !== 'Not given' ? ' · ' + esc(a.insurance) : ''}</small></td><td><span class="tag ${a.status === 'booked' && a.rescheduled ? 'rescheduled' : a.status}">${a.status === 'booked' && a.rescheduled ? 'rescheduled' : a.status}</span></td><td>${a.status === 'booked' ? `<button class="btn btn-ghost btn-sm" data-complete="${a.ref}" title="Mark visit completed and send review request">Visit done</button>` : ''}</td></tr>`).join('');
+  $('#apptEmpty').style.display = appts.length ? 'none' : 'block';
+  $('#stUpcoming').textContent = appts.filter(a => a.status === 'booked' && a.date >= today).length;
+  $('#stAfter').textContent = appts.filter(a => a.afterHours).length;
+  $('#stLeads').textContent = leads.length;
+  $('#stReviews').textContent = appts.filter(a => a.reviewSent).length;
+  $('#leadList').innerHTML = leads.length ? leads.map(l => `<div class="lead-item"><b>${esc(l.name)}</b> · ${fmtPhone(l.phone)}${l.afterHours ? ' · 🌙 after hours' : ''}<br>${esc(l.message)}<br><small>${new Date(l.at).toLocaleString()}</small></div>`).join('') : '<div class="empty">No messages yet.</div>';
+  const a = appts.find(x => x.ref === selRef) || sorted.filter(x => x.status !== 'cancelled').slice(-1)[0] || sorted.slice(-1)[0];
+  if (a) {
+    selRef = a.ref; tb.querySelector(`tr[data-ref="${a.ref}"]`)?.classList.add('sel');
+    $('#prevFor').textContent = `Previewing messages for ${a.name} (${a.ref})`;
+    $('#smsConfirm').textContent = a.status === 'cancelled' ? `${CLINIC.short}: Hi ${a.name.split(' ')[0]}, your ${fmtDate(a.date)} ${fmtTime(a.time)} appointment is cancelled. Book again anytime at brightside-dental.example or reply BOOK.` : smsConfirm(a);
+    $('#smsReminder').textContent = a.status === 'cancelled' ? '(No reminder: appointment cancelled)' : smsReminder(a);
+    $('#reviewPrev').textContent = reviewMsg(a) + (a.reviewSent ? '\n\n✅ Sent' : '\n\n⏱ Sends automatically 2 hours after the visit is marked done');
+  } else {
+    $('#prevFor').textContent = 'Select an appointment to preview its messages.';
+    $('#smsConfirm').textContent = $('#smsReminder').textContent = $('#reviewPrev').textContent = '—';
+  }
+}
+$('#apptTbl').addEventListener('click', e => {
+  const c = e.target.closest('[data-complete]');
+  if (c) { const a = appts.find(x => x.ref === c.dataset.complete); a.status = 'completed'; a.reviewSent = true; selRef = a.ref; saveAppts(); renderDash(); toast('Visit marked done · review request sent (simulated)'); return; }
+  const r = e.target.closest('tr[data-ref]'); if (r) { selRef = r.dataset.ref; renderDash(); }
+});
+$('#seedBtn').onclick = () => {
+  const names = [['Maria Lopez', 'cleaning', '3125550147'], ['James Carter', 'whitening', '2175550163'], ['Aisha Khan', 'invisalign', '6305550121'], ['Tom Becker', 'emergency', '7085550189']];
+  names.forEach(([n, s, p], i) => { const days = availableDays(s, 4); const ds = days[i % days.length]; const sl = slotsFor(ds, s); if (!sl.length) return; appts.push({ref: newRef(), service: s, patient: 'existing', date: ds, time: sl[Math.min(i * 2, sl.length - 1)], name: n, phone: p, insurance: ['Delta Dental', 'Cigna', 'None', 'Aetna'][i], status: 'booked', afterHours: i % 2 === 1, createdAt: Date.now(), source: 'Website chat'}); });
+  saveAppts(); renderDash(); toast('Sample bookings added (fictional)');
+};
+$('#resetBtn').onclick = () => { if (!confirm('Clear all demo appointments and messages?')) return; appts = []; leads = []; selRef = null; saveAppts(); saveLeads(); renderDash(); renderSite(); toast('Demo data cleared'); };
+
+/* ================= Tabs, settings, toast ================= */
+function showView(v) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === v));
+  $('#site').style.display = v === 'site' ? '' : 'none';
+  $('#dashboard').style.display = v === 'dashboard' ? 'block' : 'none';
+  if (v === 'dashboard') { renderDash(); closeChat(); }
+  $('#launcher').style.display = v === 'dashboard' ? 'none' : '';
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => showView(t.dataset.view));
+const modal = $('#settings');
+$('#settingsBtn').onclick = () => { $('#apiKey').value = settings.apiKey || ''; $('#model').value = settings.model || 'gpt-4o-mini'; $('#forceAfter').checked = !!settings.forceAfter; modal.classList.add('open'); };
+$('#closeSettings').onclick = () => modal.classList.remove('open');
+modal.onclick = e => { if (e.target === modal) modal.classList.remove('open'); };
+$('#clearKey').onclick = () => { $('#apiKey').value = ''; };
+$('#saveSettings').onclick = () => {
+  settings = {apiKey: $('#apiKey').value.trim(), model: $('#model').value.trim() || 'gpt-4o-mini', forceAfter: $('#forceAfter').checked};
+  LS.set('settings', settings); modal.classList.remove('open'); renderSite(); toast(settings.apiKey ? 'AI mode on (OpenAI)' : 'Rule-based mode');
+};
+let tt; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2200); }
+
+if (/[?&]afterhours=1/.test(location.search)) settings.forceAfter = true;
+renderSite(); renderDash();
+if (/[?&]view=dashboard/.test(location.search)) showView('dashboard');
+if (/[?&]chat=1/.test(location.search)) openChat();
+setInterval(renderSite, 60000);
+window.__demo = {get busy() { return busy; }, handle, parseDate, parseTime, slotsFor, availableDays, get appts() { return appts; }, get state() { return S; }};
+})();
+
+</script>
+</body>
+</html>
